@@ -8,5 +8,6 @@ enum class Form(val description: String) {
     OINTMENT("Мазь"),
     CANDLES("Свечи"),
     POWDER("Порошок"),
+    GEL("Гель"),
     AMPOULE("Ампула"),
 }
