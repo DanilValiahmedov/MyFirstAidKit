@@ -7,17 +7,19 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.valimade.myfirstaidkit.medicine.data.db.Database
 import com.valimade.myfirstaidkit.medicine.data.db.entities.Disease
 import com.valimade.myfirstaidkit.medicine.data.db.entities.Form
+import com.valimade.myfirstaidkit.medicine.data.db.entities.MedicineData
 import com.valimade.myfirstaidkit.medicine.data.db.entities.Symptom
 import com.valimade.myfirstaidkit.medicine.data.db.entities.Whom
 import com.valimade.myfirstaidkit.medicine.domain.model.Characteristic
 import com.valimade.myfirstaidkit.medicine.domain.model.CharacteristicItem
+import com.valimade.myfirstaidkit.medicine.domain.model.repository.MedicineRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MedicineRepositoryImpl(
     private val context: Context,
-) {
+): MedicineRepository {
 
     private val database: Database by lazy {
         Room.databaseBuilder(
@@ -92,7 +94,7 @@ class MedicineRepositoryImpl(
         whoms.forEach { dao.insertWhom(it) }
     }
 
-    suspend fun insertCharacteristic(item: CharacteristicItem) {
+    override suspend fun insertCharacteristic(item: CharacteristicItem) {
         when (item) {
             is CharacteristicItem.SymptomItem -> dao.insertSymptom(item.data)
             is CharacteristicItem.DiseaseItem -> dao.insertDisease(item.data)
@@ -101,7 +103,7 @@ class MedicineRepositoryImpl(
         }
     }
 
-    suspend fun getAllCharacteristic(characteristic: Characteristic): List<CharacteristicItem> {
+    override suspend fun getAllCharacteristic(characteristic: Characteristic): List<CharacteristicItem> {
         return when(characteristic) {
             Characteristic.SYMPTOM -> dao.getAllSymptoms().map { CharacteristicItem.SymptomItem(it) }
             Characteristic.DISEASES -> dao.getAllDiseases().map { CharacteristicItem.DiseaseItem(it) }
@@ -110,7 +112,7 @@ class MedicineRepositoryImpl(
         }
     }
 
-    suspend fun getCharacteristicById(characteristic: Characteristic, id: Int): CharacteristicItem? {
+    override suspend fun getCharacteristicById(characteristic: Characteristic, id: Int): CharacteristicItem? {
         return when (characteristic) {
             Characteristic.SYMPTOM -> dao.getSymptomById(id)?.let { CharacteristicItem.SymptomItem(it) }
             Characteristic.DISEASES -> dao.getDiseaseById(id)?.let { CharacteristicItem.DiseaseItem(it) }
@@ -119,7 +121,7 @@ class MedicineRepositoryImpl(
         }
     }
 
-    suspend fun existsCharacteristicByVerificationName(characteristic: Characteristic, verificationName: String): Boolean {
+    override suspend fun existsCharacteristicByVerificationName(characteristic: Characteristic, verificationName: String): Boolean {
         return when (characteristic) {
             Characteristic.SYMPTOM -> dao.existsSymptomByVerificationName(verificationName)
             Characteristic.DISEASES -> dao.existsDiseaseByVerificationName(verificationName)
@@ -127,5 +129,19 @@ class MedicineRepositoryImpl(
             Characteristic.WHOM -> dao.existsWhomByVerificationName(verificationName)
         }
     }
+
+    override suspend fun insertMedicine(medicine: MedicineData) = medicineDao.insertMedicine(medicine)
+
+    override suspend fun getMedicineById(id: Int): MedicineData? = medicineDao.getMedicineById(id)
+
+    override suspend fun getByVerificationName(verificationName: String): MedicineData? = medicineDao.getByVerificationName(verificationName)
+
+    override suspend fun getBySymptom(symptom: String): List<MedicineData> = medicineDao.getBySymptom(symptom)
+
+    override suspend fun getByDisease(disease: String): List<MedicineData> = medicineDao.getByDisease(disease)
+
+    override suspend fun getByForm(form: String): List<MedicineData> = medicineDao.getByForm(form)
+
+    override suspend fun getByWhom(whom: String): List<MedicineData> = medicineDao.getByWhom(whom)
 
 }
