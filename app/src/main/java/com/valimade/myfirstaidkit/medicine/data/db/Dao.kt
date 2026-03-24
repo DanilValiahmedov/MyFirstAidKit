@@ -24,6 +24,9 @@ interface Dao {
     @Query("SELECT EXISTS(SELECT 1 FROM Symptom WHERE verificationName = :verificationName)")
     suspend fun existsSymptomByVerificationName(verificationName: String): Boolean
 
+    @Query("DELETE FROM Symptom WHERE id = :id")
+    suspend fun deleteSymptomById(id: Int)
+
     // Disease
     @Insert
     suspend fun insertDisease(disease: Disease)
@@ -36,6 +39,9 @@ interface Dao {
 
     @Query("SELECT EXISTS(SELECT 1 FROM Disease WHERE verificationName = :verificationName)")
     suspend fun existsDiseaseByVerificationName(verificationName: String): Boolean
+
+    @Query("DELETE FROM Disease WHERE id = :id")
+    suspend fun deleteDiseaseById(id: Int)
 
     // Form
     @Insert
@@ -50,6 +56,9 @@ interface Dao {
     @Query("SELECT EXISTS(SELECT 1 FROM Form WHERE verificationName = :verificationName)")
     suspend fun existsFormByVerificationName(verificationName: String): Boolean
 
+    @Query("DELETE FROM Form WHERE id = :id")
+    suspend fun deleteFormById(id: Int)
+
     // Whom
     @Insert
     suspend fun insertWhom(whom: Whom)
@@ -62,5 +71,8 @@ interface Dao {
 
     @Query("SELECT EXISTS(SELECT 1 FROM Whom WHERE verificationName = :verificationName)")
     suspend fun existsWhomByVerificationName(verificationName: String): Boolean
+
+    @Query("DELETE FROM Whom WHERE id = :id")
+    suspend fun deleteWhomById(id: Int)
 
 }

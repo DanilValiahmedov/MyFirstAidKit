@@ -130,6 +130,15 @@ class MedicineRepositoryImpl(
         }
     }
 
+    override suspend fun deleteCharacteristicById(characteristic: Characteristic, id: Int) {
+         when (characteristic) {
+            Characteristic.SYMPTOM -> dao.deleteSymptomById(id)
+            Characteristic.DISEASES -> dao.deleteDiseaseById(id)
+            Characteristic.FORM -> dao.deleteFormById(id)
+            Characteristic.WHOM -> dao.deleteWhomById(id)
+        }
+    }
+
     override suspend fun insertMedicine(medicine: MedicineData) = medicineDao.insertMedicine(medicine)
 
     override suspend fun getMedicineById(id: Int): MedicineData? = medicineDao.getMedicineById(id)
@@ -143,5 +152,7 @@ class MedicineRepositoryImpl(
     override suspend fun getByForm(form: String): List<MedicineData> = medicineDao.getByForm(form)
 
     override suspend fun getByWhom(whom: String): List<MedicineData> = medicineDao.getByWhom(whom)
+
+    override suspend fun deleteMedicineDataById(id: Int) = medicineDao.deleteMedicineDataById(id)
 
 }

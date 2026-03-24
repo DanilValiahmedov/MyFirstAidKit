@@ -9,6 +9,7 @@ interface MedicineRepository {
     suspend fun getAllCharacteristic(characteristic: Characteristic): List<CharacteristicItem>
     suspend fun getCharacteristicById(characteristic: Characteristic, id: Int): CharacteristicItem?
     suspend fun existsCharacteristicByVerificationName(characteristic: Characteristic, verificationName: String): Boolean
+    suspend fun deleteCharacteristicById(characteristic: Characteristic, id: Int)
 
     suspend fun insertMedicine(medicine: MedicineData)
     suspend fun getMedicineById(id: Int): MedicineData?
@@ -17,4 +18,5 @@ interface MedicineRepository {
     suspend fun getByDisease(disease: String): List<MedicineData>
     suspend fun getByForm(form: String): List<MedicineData>
     suspend fun getByWhom(whom: String): List<MedicineData>
+    suspend fun deleteMedicineDataById(id: Int)
 }

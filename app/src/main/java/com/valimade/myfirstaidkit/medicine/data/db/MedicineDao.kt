@@ -28,4 +28,7 @@ interface MedicineDao {
 
     @Query("SELECT * FROM MedicineData WHERE forWhoms LIKE '%' || :whom || '%'")
     suspend fun getByWhom(whom: String): List<MedicineData>
+
+    @Query("DELETE FROM MedicineData WHERE id = :id")
+    suspend fun deleteMedicineDataById(id: Int)
 }
