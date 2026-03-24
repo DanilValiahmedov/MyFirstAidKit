@@ -12,7 +12,7 @@ import com.valimade.myfirstaidkit.medicine.data.db.entities.Symptom
 import com.valimade.myfirstaidkit.medicine.data.db.entities.Whom
 import com.valimade.myfirstaidkit.medicine.domain.model.Characteristic
 import com.valimade.myfirstaidkit.medicine.domain.model.CharacteristicItem
-import com.valimade.myfirstaidkit.medicine.domain.model.repository.MedicineRepository
+import com.valimade.myfirstaidkit.medicine.domain.repository.MedicineRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

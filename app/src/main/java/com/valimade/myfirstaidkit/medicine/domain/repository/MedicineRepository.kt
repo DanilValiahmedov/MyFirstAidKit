@@ -1,4 +1,4 @@
-package com.valimade.myfirstaidkit.medicine.domain.model.repository
+package com.valimade.myfirstaidkit.medicine.domain.repository
 
 import com.valimade.myfirstaidkit.medicine.data.db.entities.MedicineData
 import com.valimade.myfirstaidkit.medicine.domain.model.Characteristic

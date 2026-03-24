@@ -7,11 +7,15 @@ import androidx.room.PrimaryKey
 data class MedicineData(
     @PrimaryKey val id: Int,
     val name: String,
-    val verificationName: String, //Название без пробелов и большом регистре
+    val verificationName: String,
     val symptoms: String,
+    val symptomsVerification: String,
     val diseases: String,
+    val diseasesVerification: String,
     val forms: String,
+    val formsVerification: String,
     val forWhoms: String,
+    val forWhomsVerification: String,
     val expirationDate: Int,
     val comment: String,
 )
