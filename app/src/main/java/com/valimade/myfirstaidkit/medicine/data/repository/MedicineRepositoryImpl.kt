@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.valimade.myfirstaidkit.medicine.data.assets.InitialData
 import com.valimade.myfirstaidkit.medicine.data.db.Database
 import com.valimade.myfirstaidkit.medicine.data.db.entities.Disease
 import com.valimade.myfirstaidkit.medicine.data.db.entities.Form
@@ -19,6 +20,7 @@ import kotlinx.coroutines.launch
 
 class MedicineRepositoryImpl(
     private val context: Context,
+    private val initialData: InitialData,
 ): MedicineRepository {
 
     private val database: Database by lazy {
@@ -31,7 +33,11 @@ class MedicineRepositoryImpl(
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     super.onCreate(db)
                     CoroutineScope(Dispatchers.IO).launch {
-                        fillInitialData()
+                        //Внедрение первоначальных (дефолтных данных)
+                        initialData.symptoms.forEach { dao.insertSymptom(it) }
+                        initialData.diseases.forEach { dao.insertDisease(it) }
+                        initialData.forms.forEach { dao.insertForm(it) }
+                        initialData.whoms.forEach { dao.insertWhom(it) }
                     }
                 }
             })
@@ -40,59 +46,6 @@ class MedicineRepositoryImpl(
 
     private val dao by lazy { database.dao() }
     private val medicineDao by lazy { database.medicineDao() }
-
-    private suspend fun fillInitialData () {
-
-        val symptoms = listOf(
-            Symptom(1, "Кашель", "КАШЕЛЬ"),
-            Symptom(2, "Насморк", "НАСМОРК"),
-            Symptom(3, "Головная боль", "ГОЛОВНАЯБОЛЬ"),
-            Symptom(4, "Температура", "ТЕМПЕРАТУРА"),
-            Symptom(5, "Боль в горле", "БОЛЬВГОРЛЕ"),
-            Symptom(6, "Диарея", "ДИАРЕЯ"),
-            Symptom(7, "Тошнота", "ТОШНОТА"),
-            Symptom(8, "Боли в мышцах и суставах", "БОЛИВМЫШЦАХИСУСТАВАХ"),
-            Symptom(9, "Зубная боль", "ЗУБНАЯБОЛЬ"),
-            Symptom(10, "Аллергические реакции", "АЛЛЕРГИЧЕСКИЕРЕАКЦИИ"),
-            Symptom(11, "Профилактика простуды", "ПРОФИЛАКТИКАПРОСТУДЫ"),
-            Symptom(12, "Укрепление иммунитета", "УКРЕПЛЕНИЕИММУНИТЕТА"),
-            Symptom(13, "Отравление", "ОТРАВЛЕНИЕ"),
-            Symptom(14, "Сонливость", "СОНЛИВОСТЬ")
-        )
-        symptoms.forEach { dao.insertSymptom(it) }
-
-        val diseases = listOf(
-            Disease(id = 1, name = "Простуда", verificationName = "ПРОСТУДА"),
-            Disease(id = 2, name = "ОРВИ", verificationName = "ОРВИ"),
-            Disease(id = 3, name = "Грипп", verificationName = "ГРИПП"),
-            Disease(id = 4, name = "Аллергия", verificationName = "АЛЛЕРГИЯ"),
-            Disease(id = 5, name = "Похмелье", verificationName = "ПОХМЕЛЬЕ"),
-            Disease(id = 6, name = "Гастрит", verificationName = "ГАСТРИТ"),
-            Disease(id = 7, name = "Мигрень", verificationName = "МИГРЕНЬ")
-        )
-        diseases.forEach { dao.insertDisease(it) }
-
-        val forms = listOf(
-            Form(id = 1, name = "Таблетки", verificationName = "ТАБЛЕТКИ"),
-            Form(id = 2, name = "Капсулы", verificationName = "КАПСУЛЫ"),
-            Form(id = 3, name = "Сироп", verificationName = "СИРОП"),
-            Form(id = 4, name = "Капли", verificationName = "КАПЛИ"),
-            Form(id = 5, name = "Мазь", verificationName = "МАЗЬ"),
-            Form(id = 6, name = "Свечи", verificationName = "СВЕЧИ"),
-            Form(id = 7, name = "Порошок", verificationName = "ПОРОШОК"),
-            Form(id = 8, name = "Гель", verificationName = "ГЕЛЬ"),
-            Form(id = 9, name = "Ампула", verificationName = "АМПУЛА")
-        )
-        forms.forEach { dao.insertForm(it) }
-
-        val whoms = listOf(
-            Whom(id = 1, name = "Дети", verificationName = "ДЕТИ"),
-            Whom(id = 2, name = "Взрослые", verificationName = "ВЗРОСЛЫЕ"),
-            Whom(id = 3, name = "Мужчины", verificationName = "МУЖЧИНЫ"),
-            Whom(id = 4, name = "Женщины", verificationName = "ЖЕНЩИНЫ")
-        )
-        whoms.forEach { dao.insertWhom(it) }
-    }
 
     override suspend fun insertCharacteristic(item: CharacteristicItem) {
         when (item) {

@@ -5,7 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Form(
-    @PrimaryKey val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
     val name: String,
     val verificationName: String, //Название без пробелов и большом регистре
 )
