@@ -11,23 +11,26 @@ interface MedicineDao {
     @Insert
     suspend fun insertMedicine(medicine: MedicineData)
 
+    @Query("SELECT * FROM MedicineData")
+    suspend fun getAllMedicine(): List<MedicineData>
+
     @Query("SELECT * FROM MedicineData WHERE id = :id")
     suspend fun getMedicineById(id: Int): MedicineData?
 
     @Query("SELECT * FROM MedicineData WHERE verificationName = :verificationName")
-    suspend fun getByVerificationName(verificationName: String): MedicineData?
+    suspend fun getMedicineByVerificationName(verificationName: String): List<MedicineData>
 
     @Query("SELECT * FROM MedicineData WHERE symptoms LIKE '%' || :symptom || '%'")
-    suspend fun getBySymptom(symptom: String): List<MedicineData>
+    suspend fun getMedicineBySymptom(symptom: String): List<MedicineData>
 
     @Query("SELECT * FROM MedicineData WHERE diseases LIKE '%' || :disease || '%'")
-    suspend fun getByDisease(disease: String): List<MedicineData>
+    suspend fun getMedicineByDisease(disease: String): List<MedicineData>
 
     @Query("SELECT * FROM MedicineData WHERE forms LIKE '%' || :form || '%'")
-    suspend fun getByForm(form: String): List<MedicineData>
+    suspend fun getMedicineByForm(form: String): List<MedicineData>
 
     @Query("SELECT * FROM MedicineData WHERE forWhoms LIKE '%' || :whom || '%'")
-    suspend fun getByWhom(whom: String): List<MedicineData>
+    suspend fun getMedicineByWhom(whom: String): List<MedicineData>
 
     @Query("DELETE FROM MedicineData WHERE id = :id")
     suspend fun deleteMedicineDataById(id: Int)

@@ -47,8 +47,9 @@ class MedicineRepositoryImpl(
     private val dao by lazy { database.dao() }
     private val medicineDao by lazy { database.medicineDao() }
 
-    override suspend fun insertCharacteristic(item: CharacteristicItem) {
+    override suspend fun insertItem(item: CharacteristicItem) {
         when (item) {
+            is CharacteristicItem.MedicineItem -> medicineDao.insertMedicine(item.data)
             is CharacteristicItem.SymptomItem -> dao.insertSymptom(item.data)
             is CharacteristicItem.DiseaseItem -> dao.insertDisease(item.data)
             is CharacteristicItem.FormItem -> dao.insertForm(item.data)
@@ -56,8 +57,9 @@ class MedicineRepositoryImpl(
         }
     }
 
-    override suspend fun getAllCharacteristic(characteristic: Characteristic): List<CharacteristicItem> {
+    override suspend fun getAllItem(characteristic: Characteristic): List<CharacteristicItem> {
         return when(characteristic) {
+            Characteristic.MEDICINE -> medicineDao.getAllMedicine().map { CharacteristicItem.MedicineItem(it) }
             Characteristic.SYMPTOM -> dao.getAllSymptoms().map { CharacteristicItem.SymptomItem(it) }
             Characteristic.DISEASES -> dao.getAllDiseases().map { CharacteristicItem.DiseaseItem(it) }
             Characteristic.FORM -> dao.getAllForms().map { CharacteristicItem.FormItem(it) }
@@ -65,8 +67,9 @@ class MedicineRepositoryImpl(
         }
     }
 
-    override suspend fun getCharacteristicById(characteristic: Characteristic, id: Int): CharacteristicItem? {
+    override suspend fun getItemById(characteristic: Characteristic, id: Int): CharacteristicItem? {
         return when (characteristic) {
+            Characteristic.MEDICINE -> medicineDao.getMedicineById(id)?.let { CharacteristicItem.MedicineItem(it) }
             Characteristic.SYMPTOM -> dao.getSymptomById(id)?.let { CharacteristicItem.SymptomItem(it) }
             Characteristic.DISEASES -> dao.getDiseaseById(id)?.let { CharacteristicItem.DiseaseItem(it) }
             Characteristic.FORM -> dao.getFormById(id)?.let { CharacteristicItem.FormItem(it) }
@@ -76,6 +79,7 @@ class MedicineRepositoryImpl(
 
     override suspend fun existsCharacteristicByVerificationName(characteristic: Characteristic, verificationName: String): Boolean {
         return when (characteristic) {
+            Characteristic.MEDICINE -> false
             Characteristic.SYMPTOM -> dao.existsSymptomByVerificationName(verificationName)
             Characteristic.DISEASES -> dao.existsDiseaseByVerificationName(verificationName)
             Characteristic.FORM -> dao.existsFormByVerificationName(verificationName)
@@ -83,8 +87,9 @@ class MedicineRepositoryImpl(
         }
     }
 
-    override suspend fun deleteCharacteristicById(characteristic: Characteristic, id: Int) {
+    override suspend fun deleteItemById(characteristic: Characteristic, id: Int) {
          when (characteristic) {
+            Characteristic.MEDICINE -> medicineDao.deleteMedicineDataById(id)
             Characteristic.SYMPTOM -> dao.deleteSymptomById(id)
             Characteristic.DISEASES -> dao.deleteDiseaseById(id)
             Characteristic.FORM -> dao.deleteFormById(id)
@@ -92,20 +97,14 @@ class MedicineRepositoryImpl(
         }
     }
 
-    override suspend fun insertMedicine(medicine: MedicineData) = medicineDao.insertMedicine(medicine)
-
-    override suspend fun getMedicineById(id: Int): MedicineData? = medicineDao.getMedicineById(id)
-
-    override suspend fun getByVerificationName(verificationName: String): MedicineData? = medicineDao.getByVerificationName(verificationName)
-
-    override suspend fun getBySymptom(symptom: String): List<MedicineData> = medicineDao.getBySymptom(symptom)
-
-    override suspend fun getByDisease(disease: String): List<MedicineData> = medicineDao.getByDisease(disease)
-
-    override suspend fun getByForm(form: String): List<MedicineData> = medicineDao.getByForm(form)
-
-    override suspend fun getByWhom(whom: String): List<MedicineData> = medicineDao.getByWhom(whom)
-
-    override suspend fun deleteMedicineDataById(id: Int) = medicineDao.deleteMedicineDataById(id)
+    override suspend fun getMedicineByCharacteristic(characteristic: Characteristic, name: String): List<MedicineData> {
+        return when (characteristic) {
+            Characteristic.MEDICINE -> medicineDao.getMedicineByVerificationName(name)
+            Characteristic.SYMPTOM -> medicineDao.getMedicineBySymptom(name)
+            Characteristic.DISEASES -> medicineDao.getMedicineByDisease(name)
+            Characteristic.FORM -> medicineDao.getMedicineByForm(name)
+            Characteristic.WHOM -> medicineDao.getMedicineByWhom(name)
+        }
+    }
 
 }
