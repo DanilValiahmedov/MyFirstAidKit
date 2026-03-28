@@ -6,4 +6,5 @@ enum class Characteristic {
     DISEASES,
     FORM,
     WHOM,
+    LOCATION,
 }

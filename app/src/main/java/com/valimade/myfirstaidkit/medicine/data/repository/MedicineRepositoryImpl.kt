@@ -36,6 +36,7 @@ class MedicineRepositoryImpl(
                         initialData.diseases.forEach { dao.insertDisease(it) }
                         initialData.forms.forEach { dao.insertForm(it) }
                         initialData.whoms.forEach { dao.insertWhom(it) }
+                        initialData.locations.forEach { dao.insertLocation(it) }
                     }
                 }
             })
@@ -55,6 +56,7 @@ class MedicineRepositoryImpl(
             is CharacteristicItem.DiseaseItem -> dao.insertDisease(item.data)
             is CharacteristicItem.FormItem -> dao.insertForm(item.data)
             is CharacteristicItem.WhomItem -> dao.insertWhom(item.data)
+            is CharacteristicItem.LocationItem -> dao.insertLocation(item.data)
         }
     }
 
@@ -68,6 +70,7 @@ class MedicineRepositoryImpl(
             Characteristic.DISEASES -> dao.getAllDiseases().map { CharacteristicItem.DiseaseItem(it) }
             Characteristic.FORM -> dao.getAllForms().map { CharacteristicItem.FormItem(it) }
             Characteristic.WHOM -> dao.getAllWhoms().map { CharacteristicItem.WhomItem(it) }
+            Characteristic.LOCATION -> dao.getAllLocations().map { CharacteristicItem.LocationItem(it) }
         }
     }
 
@@ -81,6 +84,7 @@ class MedicineRepositoryImpl(
             Characteristic.DISEASES -> dao.getDiseaseById(id)?.let { CharacteristicItem.DiseaseItem(it) }
             Characteristic.FORM -> dao.getFormById(id)?.let { CharacteristicItem.FormItem(it) }
             Characteristic.WHOM -> dao.getWhomById(id)?.let { CharacteristicItem.WhomItem(it) }
+            Characteristic.LOCATION -> dao.getLocationById(id)?.let { CharacteristicItem.LocationItem(it) }
         }
     }
 
@@ -91,6 +95,7 @@ class MedicineRepositoryImpl(
             Characteristic.DISEASES -> dao.existsDiseaseByVerificationName(verificationName)
             Characteristic.FORM -> dao.existsFormByVerificationName(verificationName)
             Characteristic.WHOM -> dao.existsWhomByVerificationName(verificationName)
+            Characteristic.LOCATION -> dao.existsLocationByVerificationName(verificationName)
         }
     }
 
@@ -101,6 +106,7 @@ class MedicineRepositoryImpl(
             Characteristic.DISEASES -> dao.deleteDiseaseById(id)
             Characteristic.FORM -> dao.deleteFormById(id)
             Characteristic.WHOM -> dao.deleteWhomById(id)
+            Characteristic.LOCATION -> dao.deleteLocationById(id)
         }
     }
 
@@ -111,6 +117,7 @@ class MedicineRepositoryImpl(
             Characteristic.DISEASES -> medicineDao.getMedicineByDisease(name)
             Characteristic.FORM -> medicineDao.getMedicineByForm(name)
             Characteristic.WHOM -> medicineDao.getMedicineByWhom(name)
+            Characteristic.LOCATION -> medicineDao.getMedicineByLocation(name)
         }
         return medicineListData.map{
             medicineMapper.fromDataToDomain(it)

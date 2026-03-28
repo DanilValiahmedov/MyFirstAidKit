@@ -6,6 +6,7 @@ import androidx.room.Query
 import com.valimade.myfirstaidkit.medicine.data.db.entities.Disease
 import com.valimade.myfirstaidkit.medicine.data.db.entities.Form
 import com.valimade.myfirstaidkit.medicine.data.db.entities.Symptom
+import com.valimade.myfirstaidkit.medicine.data.db.entities.Location
 import com.valimade.myfirstaidkit.medicine.data.db.entities.Whom
 
 @Dao
@@ -74,5 +75,21 @@ interface Dao {
 
     @Query("DELETE FROM Whom WHERE id = :id")
     suspend fun deleteWhomById(id: Int)
+
+    // Location
+    @Insert
+    suspend fun insertLocation(location: Location)
+
+    @Query("SELECT * FROM Location")
+    suspend fun getAllLocations(): List<Location>
+
+    @Query("SELECT * FROM Location WHERE id = :id")
+    suspend fun getLocationById(id: Int): Location?
+
+    @Query("SELECT EXISTS(SELECT 1 FROM Location WHERE verificationName = :verificationName)")
+    suspend fun existsLocationByVerificationName(verificationName: String): Boolean
+
+    @Query("DELETE FROM Location WHERE id = :id")
+    suspend fun deleteLocationById(id: Int)
 
 }

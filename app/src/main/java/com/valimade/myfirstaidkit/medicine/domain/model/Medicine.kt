@@ -12,6 +12,8 @@ data class Medicine (
     val formsVerification: List<String>, //Форма лекарства без пробелов и большом регистре (для поиска)
     val forWhoms: List<String>, //Для кого лекарство (для показа)
     val forWhomsVerification: List<String>, //Для кого лекарство без пробелов и большом регистре (для поиска)
+    val locations: List<String>, //Где хранится лекарство (для показа)
+    val locationsVerification: List<String>, //Где хранится лекарство без пробелов и большом регистре (для поиска)
     val expirationDate: Int, //Дата срока годности
     val comment: String, //Комментарий от пользователя
 )

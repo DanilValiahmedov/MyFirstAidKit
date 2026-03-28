@@ -2,6 +2,7 @@ package com.valimade.myfirstaidkit.medicine.data.assets
 
 import com.valimade.myfirstaidkit.medicine.data.db.entities.Disease
 import com.valimade.myfirstaidkit.medicine.data.db.entities.Form
+import com.valimade.myfirstaidkit.medicine.data.db.entities.Location
 import com.valimade.myfirstaidkit.medicine.data.db.entities.Symptom
 import com.valimade.myfirstaidkit.medicine.data.db.entities.Whom
 
@@ -76,6 +77,19 @@ object InitialData {
 
     val whoms = whomsName.map {
         Whom(
+            name = it,
+            verificationName = it.uppercase().replace(" ", "")
+        )
+    }
+
+    private val locationsName = listOf(
+        "Дом",
+        "Машина",
+        "Дача"
+    )
+
+    val locations = locationsName.map {
+        Location(
             name = it,
             verificationName = it.uppercase().replace(" ", "")
         )

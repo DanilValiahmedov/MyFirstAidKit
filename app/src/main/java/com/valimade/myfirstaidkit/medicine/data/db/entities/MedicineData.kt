@@ -17,6 +17,8 @@ data class MedicineData(
     val formsVerification: String,
     val forWhoms: String,
     val forWhomsVerification: String,
+    val locations: String,
+    val locationsVerification: String,
     val expirationDate: Int,
     val comment: String,
 )
