@@ -5,8 +5,11 @@ import com.valimade.myfirstaidkit.medicine.data.db.entities.Form
 import com.valimade.myfirstaidkit.medicine.data.db.entities.Location
 import com.valimade.myfirstaidkit.medicine.data.db.entities.Symptom
 import com.valimade.myfirstaidkit.medicine.data.db.entities.Whom
+import com.valimade.myfirstaidkit.medicine.domain.utils.StringNormalizer
 
-object InitialData {
+class InitialData(
+    private val normalizer: StringNormalizer
+) {
     private val symptomsName = listOf(
         "Кашель",
         "Насморк",
@@ -27,7 +30,7 @@ object InitialData {
     val symptoms = symptomsName.map {
         Symptom(
             name = it,
-            verificationName = it.uppercase().replace(" ", "")
+            verificationName = normalizer.normalizeVerificationName(it)
         )
     }
 
@@ -45,7 +48,7 @@ object InitialData {
     val diseases = diseasesName.map {
         Disease(
             name = it,
-            verificationName = it.uppercase().replace(" ", "")
+            verificationName = normalizer.normalizeVerificationName(it)
         )
     }
 
@@ -64,7 +67,7 @@ object InitialData {
     val forms = formsName.map {
         Form(
             name = it,
-            verificationName = it.uppercase().replace(" ", "")
+            verificationName = normalizer.normalizeVerificationName(it)
         )
     }
 
@@ -78,7 +81,7 @@ object InitialData {
     val whoms = whomsName.map {
         Whom(
             name = it,
-            verificationName = it.uppercase().replace(" ", "")
+            verificationName = normalizer.normalizeVerificationName(it)
         )
     }
 
@@ -91,7 +94,7 @@ object InitialData {
     val locations = locationsName.map {
         Location(
             name = it,
-            verificationName = it.uppercase().replace(" ", "")
+            verificationName = normalizer.normalizeVerificationName(it)
         )
     }
 }

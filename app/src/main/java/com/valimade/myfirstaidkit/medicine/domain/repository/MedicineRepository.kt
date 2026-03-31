@@ -10,5 +10,12 @@ interface MedicineRepository {
     suspend fun getItemById(characteristic: Characteristic, id: Int): CharacteristicItem?
     suspend fun existsCharacteristicByVerificationName(characteristic: Characteristic, verificationName: String): Boolean
     suspend fun deleteItemById(characteristic: Characteristic, id: Int)
-    suspend fun getMedicineByCharacteristic(characteristic: Characteristic, name: String): List<Medicine>
+    suspend fun getMedicineByCharacteristic(
+        verificationName: String?,
+        symptom: String?,
+        disease: String?,
+        form: String?,
+        forWhom: String?,
+        location: String?,
+    ): List<Medicine>
 }

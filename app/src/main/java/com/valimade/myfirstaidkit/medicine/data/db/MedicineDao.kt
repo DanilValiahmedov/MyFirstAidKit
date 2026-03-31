@@ -17,23 +17,24 @@ interface MedicineDao {
     @Query("SELECT * FROM MedicineData WHERE id = :id")
     suspend fun getMedicineById(id: Int): MedicineData?
 
-    @Query("SELECT * FROM MedicineData WHERE verificationName = :verificationName")
-    suspend fun getMedicineByVerificationName(verificationName: String): List<MedicineData>
-
-    @Query("SELECT * FROM MedicineData WHERE symptoms LIKE '%' || :symptom || '%'")
-    suspend fun getMedicineBySymptom(symptom: String): List<MedicineData>
-
-    @Query("SELECT * FROM MedicineData WHERE diseases LIKE '%' || :disease || '%'")
-    suspend fun getMedicineByDisease(disease: String): List<MedicineData>
-
-    @Query("SELECT * FROM MedicineData WHERE forms LIKE '%' || :form || '%'")
-    suspend fun getMedicineByForm(form: String): List<MedicineData>
-
-    @Query("SELECT * FROM MedicineData WHERE forWhoms LIKE '%' || :whom || '%'")
-    suspend fun getMedicineByWhom(whom: String): List<MedicineData>
-
-    @Query("SELECT * FROM MedicineData WHERE locations LIKE '%' || :location || '%'")
-    suspend fun getMedicineByLocation(location: String): List<MedicineData>
+    @Query("""
+    SELECT * FROM MedicineData 
+    WHERE 
+        (:verificationName IS NULL OR verificationName LIKE '%' || :verificationName || '%') AND
+        (:symptom IS NULL OR symptomsVerification LIKE '%' || :symptom || '%') AND
+        (:disease IS NULL OR diseasesVerification LIKE '%' || :disease || '%') AND
+        (:form IS NULL OR formsVerification LIKE '%' || :form || '%') AND
+        (:forWhom IS NULL OR forWhomsVerification LIKE '%' || :forWhom || '%') AND
+        (:location IS NULL OR locationsVerification LIKE '%' || :location || '%')
+""")
+    suspend fun searchMedicine(
+        verificationName: String?,
+        symptom: String?,
+        disease: String?,
+        form: String?,
+        forWhom: String?,
+        location: String?,
+    ): List<MedicineData>
 
     @Query("DELETE FROM MedicineData WHERE id = :id")
     suspend fun deleteMedicineDataById(id: Int)

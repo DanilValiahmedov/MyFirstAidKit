@@ -110,15 +110,22 @@ class MedicineRepositoryImpl(
         }
     }
 
-    override suspend fun getMedicineByCharacteristic(characteristic: Characteristic, name: String): List<Medicine> {
-        val medicineListData = when (characteristic) {
-            Characteristic.MEDICINE -> medicineDao.getMedicineByVerificationName(name)
-            Characteristic.SYMPTOM -> medicineDao.getMedicineBySymptom(name)
-            Characteristic.DISEASES -> medicineDao.getMedicineByDisease(name)
-            Characteristic.FORM -> medicineDao.getMedicineByForm(name)
-            Characteristic.WHOM -> medicineDao.getMedicineByWhom(name)
-            Characteristic.LOCATION -> medicineDao.getMedicineByLocation(name)
-        }
+    override suspend fun getMedicineByCharacteristic(
+        verificationName: String?,
+        symptom: String?,
+        disease: String?,
+        form: String?,
+        forWhom: String?,
+        location: String?,
+    ): List<Medicine> {
+        val medicineListData = medicineDao.searchMedicine(
+            verificationName = verificationName,
+            symptom = symptom,
+            disease = disease,
+            form = form,
+            forWhom = forWhom,
+            location = location,
+        )
         return medicineListData.map{
             medicineMapper.fromDataToDomain(it)
         }
