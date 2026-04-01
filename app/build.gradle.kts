@@ -38,6 +38,20 @@ android {
     buildFeatures {
         compose = true
     }
+    sourceSets {
+        getByName("main") {
+            kotlin.srcDir("build/generated/ksp/main/kotlin")
+            java.srcDir("build/generated/ksp/main/java")
+        }
+        getByName("debug") {
+            kotlin.srcDir("build/generated/ksp/debug/kotlin")
+            java.srcDir("build/generated/ksp/debug/java")
+        }
+        getByName("release") {
+            kotlin.srcDir("build/generated/ksp/release/kotlin")
+            java.srcDir("build/generated/ksp/release/java")
+        }
+    }
 }
 
 dependencies {
