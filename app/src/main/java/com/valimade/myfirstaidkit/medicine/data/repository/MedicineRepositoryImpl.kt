@@ -112,23 +112,36 @@ class MedicineRepositoryImpl(
 
     override suspend fun getMedicineByCharacteristic(
         verificationName: String?,
-        symptom: String?,
-        disease: String?,
-        form: String?,
-        forWhom: String?,
-        location: String?,
+        symptoms: List<String>?,
+        diseases: List<String>?,
+        forms: List<String>?,
+        forWhoms: List<String>?,
+        locations: List<String>?,
     ): List<Medicine> {
+        val symptomsQuery = symptoms.toFtsQuery()
+        val diseasesQuery = diseases.toFtsQuery()
+        val formsQuery = forms.toFtsQuery()
+        val forWhomsQuery = forWhoms.toFtsQuery()
+        val locationsQuery = locations.toFtsQuery()
+
         val medicineListData = medicineDao.searchMedicine(
             verificationName = verificationName,
-            symptom = symptom,
-            disease = disease,
-            form = form,
-            forWhom = forWhom,
-            location = location,
+            symptoms = symptomsQuery,
+            diseases = diseasesQuery,
+            forms = formsQuery,
+            forWhoms = forWhomsQuery,
+            locations = locationsQuery,
         )
         return medicineListData.map{
             medicineMapper.fromDataToDomain(it)
         }
     }
 
+}
+
+fun List<String>?.toFtsQuery(): String? {
+    return this
+        ?.filter { it.isNotBlank() }
+        ?.joinToString(" ") { "+$it" }
+        ?.takeIf { it.isNotBlank() }
 }

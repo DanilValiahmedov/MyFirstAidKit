@@ -12,10 +12,10 @@ interface MedicineRepository {
     suspend fun deleteItemById(characteristic: Characteristic, id: Int)
     suspend fun getMedicineByCharacteristic(
         verificationName: String?,
-        symptom: String?,
-        disease: String?,
-        form: String?,
-        forWhom: String?,
-        location: String?,
+        symptoms: List<String>?,
+        diseases: List<String>?,
+        forms: List<String>?,
+        forWhoms: List<String>?,
+        locations: List<String>?,
     ): List<Medicine>
 }
