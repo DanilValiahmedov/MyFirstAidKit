@@ -1,0 +1,21 @@
+package com.valimade.myfirstaidkit.ui.state
+
+import com.valimade.myfirstaidkit.data.db.entities.Disease
+import com.valimade.myfirstaidkit.data.db.entities.Form
+import com.valimade.myfirstaidkit.data.db.entities.Location
+import com.valimade.myfirstaidkit.data.db.entities.Symptom
+import com.valimade.myfirstaidkit.data.db.entities.Whom
+import com.valimade.myfirstaidkit.domain.model.Medicine
+
+data class MedicineState(
+    val isLoading: Boolean = true,
+    val error: String? = null,
+
+    val medicine: Medicine = Medicine(name = "", verificationName = ""),
+    //Pair - ячейка из таблицы и ее состояние активности (для отображения)
+    val symptoms: List<Pair<Symptom, Boolean>> = emptyList(),
+    val diseases: List<Pair<Disease, Boolean>> = emptyList(),
+    val forms: List<Pair<Form, Boolean>> = emptyList(),
+    val forWhoms: List<Pair<Whom, Boolean>> = emptyList(),
+    val locations: List<Pair<Location, Boolean>> = emptyList(),
+)
