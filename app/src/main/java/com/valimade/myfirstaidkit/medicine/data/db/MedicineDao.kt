@@ -3,6 +3,7 @@ package com.valimade.myfirstaidkit.medicine.data.db
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.valimade.myfirstaidkit.medicine.data.db.entities.MedicineData
 import com.valimade.myfirstaidkit.medicine.data.db.entities.MedicineFts
 
@@ -37,6 +38,9 @@ interface MedicineDao {
         forWhoms: String?,
         locations: String?
     ): List<MedicineData>
+
+    @Update
+    suspend fun updateMedicineData(medicine: MedicineData)
 
     @Query("DELETE FROM MedicineData WHERE id = :id")
     suspend fun deleteMedicineDataById(id: Int)

@@ -6,6 +6,7 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.valimade.myfirstaidkit.medicine.data.assets.InitialData
 import com.valimade.myfirstaidkit.medicine.data.db.Database
+import com.valimade.myfirstaidkit.medicine.data.db.entities.MedicineData
 import com.valimade.myfirstaidkit.medicine.data.mapper.MedicineDataMapper
 import com.valimade.myfirstaidkit.medicine.domain.model.Characteristic
 import com.valimade.myfirstaidkit.medicine.domain.model.CharacteristicItem
@@ -96,6 +97,13 @@ class MedicineRepositoryImpl(
             Characteristic.FORM -> dao.existsFormByVerificationName(verificationName)
             Characteristic.WHOM -> dao.existsWhomByVerificationName(verificationName)
             Characteristic.LOCATION -> dao.existsLocationByVerificationName(verificationName)
+        }
+    }
+
+    override suspend fun updateMedicine(medicineItem: CharacteristicItem) {
+        if(medicineItem is CharacteristicItem.MedicineItem ) {
+            val medicineData = medicineMapper.fromDomainToData(medicineItem.data)
+            medicineDao.insertMedicine(medicineData)
         }
     }
 
