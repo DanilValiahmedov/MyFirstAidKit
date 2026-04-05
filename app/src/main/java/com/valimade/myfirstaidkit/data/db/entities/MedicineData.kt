@@ -19,6 +19,7 @@ data class MedicineData(
     val forWhomsVerification: String? = null,
     val locations: String? = null,
     val locationsVerification: String? = null,
-    val expirationDate: Int? = null,
+    val expirationDateVisually: String? = null,
+    val expirationDate: Long? = null,
     val comment: String? = null,
 )

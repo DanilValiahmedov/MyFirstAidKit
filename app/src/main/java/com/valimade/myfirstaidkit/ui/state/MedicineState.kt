@@ -18,4 +18,7 @@ data class MedicineState(
     val forms: List<Pair<Form, Boolean>> = emptyList(),
     val forWhoms: List<Pair<Whom, Boolean>> = emptyList(),
     val locations: List<Pair<Location, Boolean>> = emptyList(),
+
+    val daysShown: List<Int> = (1..31).toList(),
+    val yearsShown: List<Int> = (2026..2046).toList(),
 )

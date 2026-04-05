@@ -23,6 +23,7 @@ object MedicineDataMapper {
             forWhomsVerification = medicine.forWhomsVerification?.split(SEPARATOR_FOR_FTS4),
             locations = medicine.locations?.split(SEPARATOR),
             locationsVerification = medicine.locationsVerification?.split(SEPARATOR_FOR_FTS4),
+            expirationDateVisually = medicine.expirationDateVisually,
             expirationDate = medicine.expirationDate,
             comment = medicine.comment,
         )
@@ -42,6 +43,7 @@ object MedicineDataMapper {
             forWhomsVerification = medicine.forWhomsVerification?.joinToString(SEPARATOR_FOR_FTS4),
             locations = medicine.locations?.joinToString(SEPARATOR),
             locationsVerification = medicine.locationsVerification?.joinToString(SEPARATOR_FOR_FTS4),
+            expirationDateVisually = medicine.expirationDateVisually,
             expirationDate = medicine.expirationDate,
             comment = medicine.comment,
         )
