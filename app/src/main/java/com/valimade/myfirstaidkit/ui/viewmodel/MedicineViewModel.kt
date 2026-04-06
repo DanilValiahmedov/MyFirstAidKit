@@ -6,6 +6,7 @@ import com.valimade.myfirstaidkit.data.db.entities.Form
 import com.valimade.myfirstaidkit.data.db.entities.Location
 import com.valimade.myfirstaidkit.data.db.entities.Symptom
 import com.valimade.myfirstaidkit.data.db.entities.Whom
+import com.valimade.myfirstaidkit.domain.model.Characteristic
 import com.valimade.myfirstaidkit.domain.model.Characteristic.DISEASES
 import com.valimade.myfirstaidkit.domain.model.Characteristic.FORM
 import com.valimade.myfirstaidkit.domain.model.Characteristic.LOCATION
@@ -19,8 +20,10 @@ import com.valimade.myfirstaidkit.domain.model.CharacteristicItem.LocationItem
 import com.valimade.myfirstaidkit.domain.model.CharacteristicItem.MedicineItem
 import com.valimade.myfirstaidkit.domain.model.CharacteristicItem.SymptomItem
 import com.valimade.myfirstaidkit.domain.model.CharacteristicItem.WhomItem
+import com.valimade.myfirstaidkit.domain.usecase.ExistsCharacteristicUseCase
 import com.valimade.myfirstaidkit.domain.usecase.GetAllItemUseCase
 import com.valimade.myfirstaidkit.domain.usecase.GetItemUseCase
+import com.valimade.myfirstaidkit.domain.usecase.InsertItemUseCase
 import com.valimade.myfirstaidkit.domain.utils.StringNormalizer
 import com.valimade.myfirstaidkit.ui.model.Months
 import com.valimade.myfirstaidkit.ui.model.Operation
@@ -36,6 +39,8 @@ import java.time.ZoneId
 class MedicineViewModel(
     private val getAllItemUseCase: GetAllItemUseCase,
     private val getItemUseCase: GetItemUseCase,
+    private val existsCharacteristicUseCase: ExistsCharacteristicUseCase,
+    private val insertItemUseCase: InsertItemUseCase,
     private val normalizer: StringNormalizer,
 ): ViewModel() {
     private val _medicineState = MutableStateFlow(MedicineState())
@@ -256,6 +261,233 @@ class MedicineViewModel(
                 }
             }
             else -> {}
+        }
+    }
+
+    fun createOrCloseCharacteristicField(characteristic: Characteristic, value: Boolean) {
+        when(characteristic) {
+            MEDICINE -> {
+                _medicineState.update {
+                    it.copy(
+                        error = "Произошла ошибка при создании данной характеристики препарата",
+                    )
+                }
+            }
+            SYMPTOM -> {
+                _medicineState.update {
+                    it.copy(
+                        isNewSymptom = value,
+                        newSymptom = "",
+                    )
+                }
+            }
+            DISEASES -> {
+                _medicineState.update {
+                    it.copy(
+                        isNewDisease = value,
+                        newDisease = "",
+                    )
+                }
+            }
+            FORM -> {
+                _medicineState.update {
+                    it.copy(
+                        isNewForm = value,
+                        newForm = "",
+                    )
+                }
+            }
+            WHOM -> {
+                _medicineState.update {
+                    it.copy(
+                        isNewWhom = value,
+                        newWhom = "",
+                    )
+                }
+            }
+            LOCATION -> {
+                _medicineState.update {
+                    it.copy(
+                        isNewLocation = value,
+                        newLocation = "",
+                    )
+                }
+            }
+        }
+    }
+
+    fun addCharacteristicName(characteristic: Characteristic, name: String) {
+        when(characteristic) {
+            MEDICINE -> {
+                _medicineState.update {
+                    it.copy(
+                        error = "Произошла ошибка при создании данной характеристики препарата",
+                    )
+                }
+            }
+            SYMPTOM -> {
+                _medicineState.update {
+                    it.copy(
+                        newSymptom = name,
+                    )
+                }
+            }
+            DISEASES -> {
+                _medicineState.update {
+                    it.copy(
+                        newDisease = name,
+                    )
+                }
+            }
+            FORM -> {
+                _medicineState.update {
+                    it.copy(
+                        newForm = name,
+                    )
+                }
+            }
+            WHOM -> {
+                _medicineState.update {
+                    it.copy(
+                        newWhom = name,
+                    )
+                }
+            }
+            LOCATION -> {
+                _medicineState.update {
+                    it.copy(
+                        newLocation = name,
+                    )
+                }
+            }
+        }
+    }
+
+    suspend fun createCharacteristic(characteristic: Characteristic, name: String) {
+        val verificationName = normalizer.normalizeVerificationName(name)
+        if(!existsCharacteristicUseCase(characteristic, verificationName)) {
+            when(characteristic) {
+                MEDICINE -> {
+                    _medicineState.update {
+                        it.copy(
+                            error = "Произошла ошибка при создании данной характеристики препарата",
+                        )
+                    }
+                }
+                SYMPTOM -> {
+                    val symptom = SymptomItem(
+                        Symptom(name = name, verificationName = verificationName)
+                    )
+                    insertItemUseCase(symptom)
+
+                    _medicineState.update {
+                        it.copy(
+                            symptoms = it.symptoms + Pair(symptom.data, true),
+                        )
+                    }
+                }
+                DISEASES -> {
+                    val disease = DiseaseItem(
+                        Disease(name = name, verificationName = verificationName)
+                    )
+                    insertItemUseCase(disease)
+
+                    _medicineState.update {
+                        it.copy(
+                            diseases = it.diseases + Pair(disease.data, true),
+                        )
+                    }
+                }
+                FORM -> {
+                    val form = FormItem(
+                        Form(name = name, verificationName = verificationName)
+                    )
+                    insertItemUseCase(form)
+
+                    _medicineState.update {
+                        it.copy(
+                            forms = it.forms + Pair(form.data, true),
+                        )
+                    }
+                }
+                WHOM -> {
+                    val whom = WhomItem(
+                        Whom(name = name, verificationName = verificationName)
+                    )
+                    insertItemUseCase(whom)
+
+                    _medicineState.update {
+                        it.copy(
+                            forWhoms = it.forWhoms + Pair(whom.data, true),
+                        )
+                    }
+                }
+                LOCATION -> {
+                    val location = LocationItem(
+                        Location(name = name, verificationName = verificationName)
+                    )
+                    insertItemUseCase(location)
+
+                    _medicineState.update {
+                        it.copy(
+                            locations = it.locations + Pair(location.data, true),
+                        )
+                    }
+                }
+            }
+        } else {
+            _medicineState.update {
+                it.copy(
+                    error = "Данная характеристика уже присутсвует в списке",
+                )
+            }
+        }
+    }
+
+    fun showDeleteCharacteristicButton(characteristic: Characteristic) {
+        when(characteristic) {
+            MEDICINE -> {
+                _medicineState.update {
+                    it.copy(
+                        error = "Произошла ошибка при удалении данной характеристики препарата",
+                    )
+                }
+            }
+            SYMPTOM -> {
+                _medicineState.update {
+                    it.copy(
+                        isDeleteSymptoms = !it.isDeleteSymptoms,
+                    )
+                }
+            }
+            DISEASES -> {
+                _medicineState.update {
+                    it.copy(
+                        isDeleteSymptoms = !it.isDeleteDiseases,
+                    )
+                }
+            }
+            FORM -> {
+                _medicineState.update {
+                    it.copy(
+                        isDeleteSymptoms = !it.isDeleteForms,
+                    )
+                }
+            }
+            WHOM -> {
+                _medicineState.update {
+                    it.copy(
+                        isDeleteSymptoms = !it.isDeleteWhoms,
+                    )
+                }
+            }
+            LOCATION -> {
+                _medicineState.update {
+                    it.copy(
+                        isDeleteSymptoms = !it.isDeleteLocations,
+                    )
+                }
+            }
         }
     }
 
