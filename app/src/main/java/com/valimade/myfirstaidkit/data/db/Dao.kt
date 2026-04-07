@@ -25,8 +25,8 @@ interface Dao {
     @Query("SELECT EXISTS(SELECT 1 FROM Symptom WHERE verificationName = :verificationName)")
     suspend fun existsSymptomByVerificationName(verificationName: String): Boolean
 
-    @Query("DELETE FROM Symptom WHERE id = :id")
-    suspend fun deleteSymptomById(id: Int)
+    @Query("DELETE FROM Symptom WHERE verificationName = :verificationName")
+    suspend fun deleteSymptomByVerificationName(verificationName: String)
 
     // Disease
     @Insert
@@ -41,8 +41,8 @@ interface Dao {
     @Query("SELECT EXISTS(SELECT 1 FROM Disease WHERE verificationName = :verificationName)")
     suspend fun existsDiseaseByVerificationName(verificationName: String): Boolean
 
-    @Query("DELETE FROM Disease WHERE id = :id")
-    suspend fun deleteDiseaseById(id: Int)
+    @Query("DELETE FROM Disease WHERE verificationName = :verificationName")
+    suspend fun deleteDiseaseByVerificationName(verificationName: String)
 
     // Form
     @Insert
@@ -57,8 +57,8 @@ interface Dao {
     @Query("SELECT EXISTS(SELECT 1 FROM Form WHERE verificationName = :verificationName)")
     suspend fun existsFormByVerificationName(verificationName: String): Boolean
 
-    @Query("DELETE FROM Form WHERE id = :id")
-    suspend fun deleteFormById(id: Int)
+    @Query("DELETE FROM Form WHERE verificationName = :verificationName")
+    suspend fun deleteFormByVerificationName(verificationName: String)
 
     // Whom
     @Insert
@@ -73,8 +73,8 @@ interface Dao {
     @Query("SELECT EXISTS(SELECT 1 FROM Whom WHERE verificationName = :verificationName)")
     suspend fun existsWhomByVerificationName(verificationName: String): Boolean
 
-    @Query("DELETE FROM Whom WHERE id = :id")
-    suspend fun deleteWhomById(id: Int)
+    @Query("DELETE FROM Whom WHERE verificationName = :verificationName")
+    suspend fun deleteWhomByVerificationName(verificationName: String)
 
     // Location
     @Insert
@@ -89,7 +89,7 @@ interface Dao {
     @Query("SELECT EXISTS(SELECT 1 FROM Location WHERE verificationName = :verificationName)")
     suspend fun existsLocationByVerificationName(verificationName: String): Boolean
 
-    @Query("DELETE FROM Location WHERE id = :id")
-    suspend fun deleteLocationById(id: Int)
+    @Query("DELETE FROM Location WHERE verificationName = :verificationName")
+    suspend fun deleteLocationByVerificationName(verificationName: String)
 
 }

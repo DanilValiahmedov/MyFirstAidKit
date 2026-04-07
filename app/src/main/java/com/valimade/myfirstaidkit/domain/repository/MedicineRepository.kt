@@ -12,7 +12,7 @@ interface MedicineRepository {
         characteristic: Characteristic, verificationName: String
     ): Boolean
     suspend fun updateMedicine(medicineItem: CharacteristicItem)
-    suspend fun deleteItemById(characteristic: Characteristic, id: Int)
+    suspend fun deleteItemByVerificationName(characteristic: Characteristic, verificationName: String)
     suspend fun getMedicineByCharacteristic(
         verificationName: String?,
         symptoms: List<String>?,

@@ -102,18 +102,18 @@ class MedicineRepositoryImpl(
     override suspend fun updateMedicine(medicineItem: CharacteristicItem) {
         if(medicineItem is CharacteristicItem.MedicineItem ) {
             val medicineData = medicineMapper.fromDomainToData(medicineItem.data)
-            medicineDao.insertMedicine(medicineData)
+            medicineDao.updateMedicine(medicineData)
         }
     }
 
-    override suspend fun deleteItemById(characteristic: Characteristic, id: Int) {
+    override suspend fun deleteItemByVerificationName(characteristic: Characteristic, verificationName: String) {
          when (characteristic) {
-            Characteristic.MEDICINE -> medicineDao.deleteMedicineDataById(id)
-            Characteristic.SYMPTOM -> dao.deleteSymptomById(id)
-            Characteristic.DISEASES -> dao.deleteDiseaseById(id)
-            Characteristic.FORM -> dao.deleteFormById(id)
-            Characteristic.WHOM -> dao.deleteWhomById(id)
-            Characteristic.LOCATION -> dao.deleteLocationById(id)
+            Characteristic.MEDICINE -> medicineDao.deleteMedicineByVerificationName(verificationName)
+            Characteristic.SYMPTOM -> dao.deleteSymptomByVerificationName(verificationName)
+            Characteristic.DISEASES -> dao.deleteDiseaseByVerificationName(verificationName)
+            Characteristic.FORM -> dao.deleteFormByVerificationName(verificationName)
+            Characteristic.WHOM -> dao.deleteWhomByVerificationName(verificationName)
+            Characteristic.LOCATION -> dao.deleteLocationByVerificationName(verificationName)
         }
     }
 

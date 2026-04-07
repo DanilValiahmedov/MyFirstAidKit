@@ -20,6 +20,7 @@ import com.valimade.myfirstaidkit.domain.model.CharacteristicItem.LocationItem
 import com.valimade.myfirstaidkit.domain.model.CharacteristicItem.MedicineItem
 import com.valimade.myfirstaidkit.domain.model.CharacteristicItem.SymptomItem
 import com.valimade.myfirstaidkit.domain.model.CharacteristicItem.WhomItem
+import com.valimade.myfirstaidkit.domain.usecase.DeleteItemUseCase
 import com.valimade.myfirstaidkit.domain.usecase.ExistsCharacteristicUseCase
 import com.valimade.myfirstaidkit.domain.usecase.GetAllItemUseCase
 import com.valimade.myfirstaidkit.domain.usecase.GetItemUseCase
@@ -41,6 +42,7 @@ class MedicineViewModel(
     private val getItemUseCase: GetItemUseCase,
     private val existsCharacteristicUseCase: ExistsCharacteristicUseCase,
     private val insertItemUseCase: InsertItemUseCase,
+    private val deleteItemUseCase: DeleteItemUseCase,
     private val normalizer: StringNormalizer,
 ): ViewModel() {
     private val _medicineState = MutableStateFlow(MedicineState())
@@ -485,6 +487,63 @@ class MedicineViewModel(
                 _medicineState.update {
                     it.copy(
                         isDeleteSymptoms = !it.isDeleteLocations,
+                    )
+                }
+            }
+        }
+    }
+
+    suspend fun deleteCharacteristic(item: CharacteristicItem) {
+        when(item) {
+            is MedicineItem -> {
+                _medicineState.update {
+                    it.copy(
+                        error = "Произошла ошибка при удалении данной характеристики препарата",
+                    )
+                }
+            }
+            is SymptomItem -> {
+                deleteItemUseCase(SYMPTOM, item.data.verificationName)
+
+                _medicineState.update {
+                    it.copy(
+                        symptoms = it.symptoms.filter { symptom -> symptom.first != item.data},
+                    )
+                }
+            }
+            is DiseaseItem -> {
+                deleteItemUseCase(DISEASES, item.data.verificationName)
+
+                _medicineState.update {
+                    it.copy(
+                        diseases = it.diseases.filter { disease -> disease.first != item.data},
+                    )
+                }
+            }
+            is FormItem -> {
+                deleteItemUseCase(FORM, item.data.verificationName)
+
+                _medicineState.update {
+                    it.copy(
+                        forms = it.forms.filter { form -> form.first != item.data},
+                    )
+                }
+            }
+            is WhomItem -> {
+                deleteItemUseCase(WHOM, item.data.verificationName)
+
+                _medicineState.update {
+                    it.copy(
+                        forWhoms = it.forWhoms.filter { whom -> whom.first != item.data},
+                    )
+                }
+            }
+            is LocationItem -> {
+                deleteItemUseCase(LOCATION, item.data.verificationName)
+
+                _medicineState.update {
+                    it.copy(
+                        locations = it.locations.filter { location -> location.first != item.data},
                     )
                 }
             }

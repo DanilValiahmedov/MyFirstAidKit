@@ -39,8 +39,8 @@ interface MedicineDao {
     ): List<MedicineData>
 
     @Update
-    suspend fun updateMedicineData(medicine: MedicineData)
+    suspend fun updateMedicine(medicine: MedicineData)
 
-    @Query("DELETE FROM MedicineData WHERE id = :id")
-    suspend fun deleteMedicineDataById(id: Int)
+    @Query("DELETE FROM MedicineData WHERE verificationName = :verificationName")
+    suspend fun deleteMedicineByVerificationName(verificationName: String)
 }
