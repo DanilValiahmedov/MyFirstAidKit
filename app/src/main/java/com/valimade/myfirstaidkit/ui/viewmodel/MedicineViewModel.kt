@@ -36,6 +36,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import java.time.LocalDate
 import java.time.ZoneId
+import kotlin.String
+import kotlin.collections.List
 
 class MedicineViewModel(
     private val getAllItemUseCase: GetAllItemUseCase,
@@ -550,4 +552,87 @@ class MedicineViewModel(
         }
     }
 
+    suspend fun saveMedicine() {
+        //Обнуляем характеристики
+        _medicineState.update {
+            it.copy(
+                medicine = it.medicine.copy(
+                    symptoms = emptyList(),
+                    symptomsVerification = emptyList(),
+                    diseases = emptyList(),
+                    diseasesVerification = emptyList(),
+                    forms = emptyList(),
+                    formsVerification = emptyList(),
+                    forWhoms = emptyList(),
+                    forWhomsVerification = emptyList(),
+                    locations = emptyList(),
+                )
+            )
+        }
+
+        //Заполяняем теукщие характеристики
+        _medicineState.value.symptoms.forEach { symptom ->
+            if(symptom.second){
+                _medicineState.update {
+                    it.copy(
+                        medicine = it.medicine.copy(
+                            symptoms = it.medicine.symptoms + symptom.first.name,
+                            symptomsVerification = it.medicine.symptomsVerification + symptom.first.verificationName,
+                        )
+                    )
+                }
+            }
+        }
+        _medicineState.value.diseases.forEach { disease ->
+            if(disease.second){
+                _medicineState.update {
+                    it.copy(
+                        medicine = it.medicine.copy(
+                            diseases = it.medicine.diseases + disease.first.name,
+                            diseasesVerification = it.medicine.diseasesVerification + disease.first.verificationName,
+                        )
+                    )
+                }
+            }
+        }
+        _medicineState.value.forms.forEach { form ->
+            if(form.second){
+                _medicineState.update {
+                    it.copy(
+                        medicine = it.medicine.copy(
+                            forms = it.medicine.forms + form.first.name,
+                            formsVerification = it.medicine.formsVerification + form.first.verificationName,
+                        )
+                    )
+                }
+            }
+        }
+        _medicineState.value.forWhoms.forEach { whom ->
+            if(whom.second){
+                _medicineState.update {
+                    it.copy(
+                        medicine = it.medicine.copy(
+                            forWhoms = it.medicine.forms + whom.first.name,
+                            forWhomsVerification = it.medicine.forWhomsVerification + whom.first.verificationName,
+                        )
+                    )
+                }
+            }
+        }
+        _medicineState.value.locations.forEach { location ->
+            if(location.second){
+                _medicineState.update {
+                    it.copy(
+                        medicine = it.medicine.copy(
+                            locations = it.medicine.locations + location.first.name,
+                            locationsVerification = it.medicine.locationsVerification + location.first.verificationName,
+                        )
+                    )
+                }
+            }
+        }
+
+        val item = MedicineItem(_medicineState.value.medicine)
+        insertItemUseCase(item)
+    }
 }
