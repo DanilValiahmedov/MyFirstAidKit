@@ -82,7 +82,7 @@ class MedicineViewModel(
                     //Береме значеия сначала из карточки лекарства, потом из БД
                     val symptomsState = mergeWithPriority(
                         allItems = symptoms.map { it.data },
-                        selectedItems = medicine.data.symptoms?.map{
+                        selectedItems = medicine.data.symptoms.map{
                             Symptom(name = it, verificationName = normalizer.normalizeVerificationName(it) )
                         },
                         selectedNames = medicine.data.symptomsVerification,
@@ -91,7 +91,7 @@ class MedicineViewModel(
 
                     val diseasesState = mergeWithPriority(
                         allItems = diseases.map { it.data },
-                        selectedItems = medicine.data.diseases?.map{
+                        selectedItems = medicine.data.diseases.map{
                             Disease(name = it, verificationName = normalizer.normalizeVerificationName(it) )
                         },
                         selectedNames = medicine.data.diseasesVerification,
@@ -100,7 +100,7 @@ class MedicineViewModel(
 
                     val formsState = mergeWithPriority(
                         allItems = forms.map { it.data },
-                        selectedItems = medicine.data.forms?.map{
+                        selectedItems = medicine.data.forms.map{
                             Form(name = it, verificationName = normalizer.normalizeVerificationName(it) )
                         },
                         selectedNames = medicine.data.formsVerification,
@@ -109,7 +109,7 @@ class MedicineViewModel(
 
                     val forWhomsState = mergeWithPriority(
                         allItems = forWhoms.map { it.data },
-                        selectedItems = medicine.data.forWhoms?.map{
+                        selectedItems = medicine.data.forWhoms.map{
                             Whom(name = it, verificationName = normalizer.normalizeVerificationName(it) )
                         },
                         selectedNames = medicine.data.forWhomsVerification,
@@ -118,7 +118,7 @@ class MedicineViewModel(
 
                     val locationsState = mergeWithPriority(
                         allItems = locations.map { it.data },
-                        selectedItems = medicine.data.locations?.map{
+                        selectedItems = medicine.data.locations.map{
                             Location(name = it, verificationName = normalizer.normalizeVerificationName(it) )
                         },
                         selectedNames = medicine.data.locationsVerification,
@@ -552,22 +552,24 @@ class MedicineViewModel(
         }
     }
 
-    suspend fun saveMedicine() {
+    suspend fun saveMedicine(operation: Operation) {
         //Обнуляем характеристики
-        _medicineState.update {
-            it.copy(
-                medicine = it.medicine.copy(
-                    symptoms = emptyList(),
-                    symptomsVerification = emptyList(),
-                    diseases = emptyList(),
-                    diseasesVerification = emptyList(),
-                    forms = emptyList(),
-                    formsVerification = emptyList(),
-                    forWhoms = emptyList(),
-                    forWhomsVerification = emptyList(),
-                    locations = emptyList(),
+        if(operation == UPDATE) {
+            _medicineState.update {
+                it.copy(
+                    medicine = it.medicine.copy(
+                        symptoms = emptyList(),
+                        symptomsVerification = emptyList(),
+                        diseases = emptyList(),
+                        diseasesVerification = emptyList(),
+                        forms = emptyList(),
+                        formsVerification = emptyList(),
+                        forWhoms = emptyList(),
+                        forWhomsVerification = emptyList(),
+                        locations = emptyList(),
+                    )
                 )
-            )
+            }
         }
 
         //Заполяняем теукщие характеристики
