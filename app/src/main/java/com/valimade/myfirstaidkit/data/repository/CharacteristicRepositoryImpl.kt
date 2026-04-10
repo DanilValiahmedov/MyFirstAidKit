@@ -93,8 +93,10 @@ class CharacteristicRepositoryImpl(
 
 
     override suspend fun deleteCharacteristicByVerificationName(
-        characteristic: Characteristic, verificationName: String
+        characteristicMedicine: CharacteristicMedicine
     ) {
+        val characteristic = characteristicMedicine.characteristic
+        val verificationName = characteristicMedicine.verificationName
         when (characteristic) {
             Characteristic.SYMPTOM -> dao.deleteSymptomByVerificationName(verificationName)
             Characteristic.DISEASES -> dao.deleteDiseaseByVerificationName(verificationName)

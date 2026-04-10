@@ -9,5 +9,5 @@ interface CharacteristicRepository {
     suspend fun existsCharacteristicByVerificationName(
         characteristic: Characteristic, verificationName: String
     ): Boolean
-    suspend fun deleteCharacteristicByVerificationName(characteristic: Characteristic, verificationName: String)
+    suspend fun deleteCharacteristicByVerificationName(characteristicMedicine: CharacteristicMedicine)
 }

@@ -19,8 +19,8 @@ interface CharacteristicDao {
     @Query("SELECT * FROM Symptom")
     suspend fun getAllSymptoms(): List<Symptom>
 
-    @Query("SELECT * FROM Symptom WHERE id = :id")
-    suspend fun getSymptomById(id: Int): Symptom?
+    @Query("SELECT * FROM Symptom WHERE verificationName = :verificationName")
+    suspend fun getSymptomByVerificationName(verificationName: String): Symptom?
 
     @Query("SELECT EXISTS(SELECT 1 FROM Symptom WHERE verificationName = :verificationName)")
     suspend fun existsSymptomByVerificationName(verificationName: String): Boolean
@@ -35,8 +35,8 @@ interface CharacteristicDao {
     @Query("SELECT * FROM Disease")
     suspend fun getAllDiseases(): List<Disease>
 
-    @Query("SELECT * FROM Disease WHERE id = :id")
-    suspend fun getDiseaseById(id: Int): Disease?
+    @Query("SELECT * FROM Disease WHERE verificationName = :verificationName")
+    suspend fun getDiseaseByVerificationName(verificationName: String): Disease?
 
     @Query("SELECT EXISTS(SELECT 1 FROM Disease WHERE verificationName = :verificationName)")
     suspend fun existsDiseaseByVerificationName(verificationName: String): Boolean
@@ -51,8 +51,8 @@ interface CharacteristicDao {
     @Query("SELECT * FROM Form")
     suspend fun getAllForms(): List<Form>
 
-    @Query("SELECT * FROM Form WHERE id = :id")
-    suspend fun getFormById(id: Int): Form?
+    @Query("SELECT * FROM Form WHERE verificationName = :verificationName")
+    suspend fun getFormByVerificationName(verificationName: String): Form?
 
     @Query("SELECT EXISTS(SELECT 1 FROM Form WHERE verificationName = :verificationName)")
     suspend fun existsFormByVerificationName(verificationName: String): Boolean
@@ -67,8 +67,8 @@ interface CharacteristicDao {
     @Query("SELECT * FROM Whom")
     suspend fun getAllWhoms(): List<Whom>
 
-    @Query("SELECT * FROM Whom WHERE id = :id")
-    suspend fun getWhomById(id: Int): Whom?
+    @Query("SELECT * FROM Whom WHERE verificationName = :verificationName")
+    suspend fun getWhomByVerificationName(verificationName: String): Whom?
 
     @Query("SELECT EXISTS(SELECT 1 FROM Whom WHERE verificationName = :verificationName)")
     suspend fun existsWhomByVerificationName(verificationName: String): Boolean
@@ -83,8 +83,8 @@ interface CharacteristicDao {
     @Query("SELECT * FROM Location")
     suspend fun getAllLocations(): List<Location>
 
-    @Query("SELECT * FROM Location WHERE id = :id")
-    suspend fun getLocationById(id: Int): Location?
+    @Query("SELECT * FROM Location WHERE verificationName = :verificationName")
+    suspend fun getLocationByVerificationName(verificationName: String): Location?
 
     @Query("SELECT EXISTS(SELECT 1 FROM Location WHERE verificationName = :verificationName)")
     suspend fun existsLocationByVerificationName(verificationName: String): Boolean
