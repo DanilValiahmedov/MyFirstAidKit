@@ -20,11 +20,11 @@ import com.valimade.myfirstaidkit.domain.model.CharacteristicItem.LocationItem
 import com.valimade.myfirstaidkit.domain.model.CharacteristicItem.MedicineItem
 import com.valimade.myfirstaidkit.domain.model.CharacteristicItem.SymptomItem
 import com.valimade.myfirstaidkit.domain.model.CharacteristicItem.WhomItem
-import com.valimade.myfirstaidkit.domain.usecase.DeleteItemUseCase
-import com.valimade.myfirstaidkit.domain.usecase.ExistsCharacteristicUseCase
-import com.valimade.myfirstaidkit.domain.usecase.GetAllItemUseCase
-import com.valimade.myfirstaidkit.domain.usecase.GetItemUseCase
-import com.valimade.myfirstaidkit.domain.usecase.InsertItemUseCase
+import com.valimade.myfirstaidkit.domain.usecase.medicine.DeleteItemUseCase
+import com.valimade.myfirstaidkit.domain.usecase.characteristic.ExistsCharacteristicUseCase
+import com.valimade.myfirstaidkit.domain.usecase.medicine.GetAllMedicineUseCase
+import com.valimade.myfirstaidkit.domain.usecase.medicine.GetMedicineUseCase
+import com.valimade.myfirstaidkit.domain.usecase.medicine.InsertItemUseCase
 import com.valimade.myfirstaidkit.domain.utils.StringNormalizer
 import com.valimade.myfirstaidkit.ui.model.Months
 import com.valimade.myfirstaidkit.ui.model.Operation
@@ -40,8 +40,8 @@ import kotlin.String
 import kotlin.collections.List
 
 class MedicineViewModel(
-    private val getAllItemUseCase: GetAllItemUseCase,
-    private val getItemUseCase: GetItemUseCase,
+    private val getAllMedicineUseCase: GetAllMedicineUseCase,
+    private val getItemUseCase: GetMedicineUseCase,
     private val existsCharacteristicUseCase: ExistsCharacteristicUseCase,
     private val insertItemUseCase: InsertItemUseCase,
     private val deleteItemUseCase: DeleteItemUseCase,
@@ -51,11 +51,11 @@ class MedicineViewModel(
     val medicineState = _medicineState.asStateFlow()
 
     suspend fun startInitialization(operation: Operation, id: Int = 0) {
-        val symptoms = getAllItemUseCase(SYMPTOM) as List<SymptomItem>
-        val diseases = getAllItemUseCase(DISEASES) as List<DiseaseItem>
-        val forms = getAllItemUseCase(FORM) as List<FormItem>
-        val forWhoms = getAllItemUseCase(WHOM) as List<WhomItem>
-        val locations = getAllItemUseCase(LOCATION) as List<LocationItem>
+        val symptoms = getAllMedicineUseCase(SYMPTOM) as List<SymptomItem>
+        val diseases = getAllMedicineUseCase(DISEASES) as List<DiseaseItem>
+        val forms = getAllMedicineUseCase(FORM) as List<FormItem>
+        val forWhoms = getAllMedicineUseCase(WHOM) as List<WhomItem>
+        val locations = getAllMedicineUseCase(LOCATION) as List<LocationItem>
 
         when(operation){
             CREATE -> {
