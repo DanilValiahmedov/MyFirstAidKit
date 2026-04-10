@@ -2,122 +2,52 @@ package com.valimade.myfirstaidkit.data.repository
 
 import android.content.Context
 import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.sqlite.db.SupportSQLiteDatabase
-import com.valimade.myfirstaidkit.data.assets.InitialData
-import com.valimade.myfirstaidkit.data.db.Database
+import com.valimade.myfirstaidkit.data.db.database.MedicineDatabase
 import com.valimade.myfirstaidkit.data.mapper.MedicineDataMapper
-import com.valimade.myfirstaidkit.domain.model.Characteristic
-import com.valimade.myfirstaidkit.domain.model.CharacteristicItem
 import com.valimade.myfirstaidkit.domain.model.Medicine
 import com.valimade.myfirstaidkit.domain.repository.MedicineRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class MedicineRepositoryImpl(
     private val context: Context,
-    private val initialData: InitialData,
-    private val medicineMapper: MedicineDataMapper,
+    private val mapper: MedicineDataMapper,
 ): MedicineRepository {
 
-    private val database: Database by lazy {
+    private val database: MedicineDatabase by lazy {
         Room.databaseBuilder(
             context,
-            Database::class.java,
+            MedicineDatabase::class.java,
             "app-database"
-        )
-            .addCallback(object : RoomDatabase.Callback() {
-                override fun onCreate(db: SupportSQLiteDatabase) {
-                    super.onCreate(db)
-                    CoroutineScope(Dispatchers.IO).launch {
-                        //Внедрение первоначальных (дефолтных данных)
-                        initialData.symptoms.forEach { dao.insertSymptom(it) }
-                        initialData.diseases.forEach { dao.insertDisease(it) }
-                        initialData.forms.forEach { dao.insertForm(it) }
-                        initialData.whoms.forEach { dao.insertWhom(it) }
-                        initialData.locations.forEach { dao.insertLocation(it) }
-                    }
-                }
-            })
-            .build()
+        ).build()
     }
-
     private val dao by lazy { database.dao() }
-    private val medicineDao by lazy { database.medicineDao() }
 
-    override suspend fun insertItem(item: CharacteristicItem) {
-        when (item) {
-            is CharacteristicItem.MedicineItem -> {
-                val medicineData = medicineMapper.fromDomainToData(item.data)
-                medicineDao.insertMedicine(medicineData)
-            }
-            is CharacteristicItem.SymptomItem -> dao.insertSymptom(item.data)
-            is CharacteristicItem.DiseaseItem -> dao.insertDisease(item.data)
-            is CharacteristicItem.FormItem -> dao.insertForm(item.data)
-            is CharacteristicItem.WhomItem -> dao.insertWhom(item.data)
-            is CharacteristicItem.LocationItem -> dao.insertLocation(item.data)
+    override suspend fun insertMedicine(medicine: Medicine) {
+        val medicineData = mapper.fromDomainToData(medicine)
+        dao.insertMedicine(medicineData)
+    }
+
+    override suspend fun getAllMedicine(): List<Medicine> {
+        return dao.getAllMedicine().map {
+            mapper.fromDataToDomain(it)
         }
     }
 
-    override suspend fun getAllItem(characteristic: Characteristic): List<CharacteristicItem> {
-        return when(characteristic) {
-            Characteristic.MEDICINE -> medicineDao.getAllMedicine().map {
-                val medicineDomain = medicineMapper.fromDataToDomain(it)
-                CharacteristicItem.MedicineItem(medicineDomain)
-            }
-            Characteristic.SYMPTOM -> dao.getAllSymptoms().map { CharacteristicItem.SymptomItem(it) }
-            Characteristic.DISEASES -> dao.getAllDiseases().map { CharacteristicItem.DiseaseItem(it) }
-            Characteristic.FORM -> dao.getAllForms().map { CharacteristicItem.FormItem(it) }
-            Characteristic.WHOM -> dao.getAllWhoms().map { CharacteristicItem.WhomItem(it) }
-            Characteristic.LOCATION -> dao.getAllLocations().map { CharacteristicItem.LocationItem(it) }
+    override suspend fun getMedicineById(id: Int): Medicine? {
+        return dao.getMedicineById(id)?.let {
+            mapper.fromDataToDomain(it)
         }
     }
 
-    override suspend fun getItemById(characteristic: Characteristic, id: Int): CharacteristicItem? {
-        return when (characteristic) {
-            Characteristic.MEDICINE -> medicineDao.getMedicineById(id)?.let {
-                val medicineDomain = medicineMapper.fromDataToDomain(it)
-                CharacteristicItem.MedicineItem(medicineDomain)
-            }
-            Characteristic.SYMPTOM -> dao.getSymptomById(id)?.let { CharacteristicItem.SymptomItem(it) }
-            Characteristic.DISEASES -> dao.getDiseaseById(id)?.let { CharacteristicItem.DiseaseItem(it) }
-            Characteristic.FORM -> dao.getFormById(id)?.let { CharacteristicItem.FormItem(it) }
-            Characteristic.WHOM -> dao.getWhomById(id)?.let { CharacteristicItem.WhomItem(it) }
-            Characteristic.LOCATION -> dao.getLocationById(id)?.let { CharacteristicItem.LocationItem(it) }
-        }
+    override suspend fun updateMedicine(medicine: Medicine) {
+        val medicineData = mapper.fromDomainToData(medicine)
+        dao.updateMedicine(medicineData)
     }
 
-    override suspend fun existsCharacteristicByVerificationName(characteristic: Characteristic, verificationName: String): Boolean {
-        return when (characteristic) {
-            Characteristic.MEDICINE -> false
-            Characteristic.SYMPTOM -> dao.existsSymptomByVerificationName(verificationName)
-            Characteristic.DISEASES -> dao.existsDiseaseByVerificationName(verificationName)
-            Characteristic.FORM -> dao.existsFormByVerificationName(verificationName)
-            Characteristic.WHOM -> dao.existsWhomByVerificationName(verificationName)
-            Characteristic.LOCATION -> dao.existsLocationByVerificationName(verificationName)
-        }
+    override suspend fun deleteMedicineById(id: Int) {
+        dao.deleteMedicineById(id)
     }
 
-    override suspend fun updateMedicine(medicineItem: CharacteristicItem) {
-        if(medicineItem is CharacteristicItem.MedicineItem ) {
-            val medicineData = medicineMapper.fromDomainToData(medicineItem.data)
-            medicineDao.updateMedicine(medicineData)
-        }
-    }
-
-    override suspend fun deleteItemByVerificationName(characteristic: Characteristic, verificationName: String) {
-         when (characteristic) {
-            Characteristic.MEDICINE -> medicineDao.deleteMedicineByVerificationName(verificationName)
-            Characteristic.SYMPTOM -> dao.deleteSymptomByVerificationName(verificationName)
-            Characteristic.DISEASES -> dao.deleteDiseaseByVerificationName(verificationName)
-            Characteristic.FORM -> dao.deleteFormByVerificationName(verificationName)
-            Characteristic.WHOM -> dao.deleteWhomByVerificationName(verificationName)
-            Characteristic.LOCATION -> dao.deleteLocationByVerificationName(verificationName)
-        }
-    }
-
-    override suspend fun getMedicineByCharacteristic(
+    override suspend fun searchMedicine(
         verificationName: String?,
         symptoms: List<String>?,
         diseases: List<String>?,
@@ -131,7 +61,7 @@ class MedicineRepositoryImpl(
         val forWhomsQuery = forWhoms.toFtsQuery()
         val locationsQuery = locations.toFtsQuery()
 
-        val medicineListData = medicineDao.searchMedicine(
+        val medicineListData = dao.searchMedicine(
             verificationName = verificationName,
             symptoms = symptomsQuery,
             diseases = diseasesQuery,
@@ -140,7 +70,7 @@ class MedicineRepositoryImpl(
             locations = locationsQuery,
         )
         return medicineListData.map{
-            medicineMapper.fromDataToDomain(it)
+            mapper.fromDataToDomain(it)
         }
     }
 

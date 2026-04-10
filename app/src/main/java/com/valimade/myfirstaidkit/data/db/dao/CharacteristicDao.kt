@@ -1,4 +1,4 @@
-package com.valimade.myfirstaidkit.data.db
+package com.valimade.myfirstaidkit.data.db.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -10,7 +10,7 @@ import com.valimade.myfirstaidkit.data.db.entities.Location
 import com.valimade.myfirstaidkit.data.db.entities.Whom
 
 @Dao
-interface Dao {
+interface CharacteristicDao {
 
     // Symptom
     @Insert

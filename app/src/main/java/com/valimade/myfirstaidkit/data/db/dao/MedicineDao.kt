@@ -1,4 +1,4 @@
-package com.valimade.myfirstaidkit.data.db
+package com.valimade.myfirstaidkit.data.db.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -41,6 +41,6 @@ interface MedicineDao {
     @Update
     suspend fun updateMedicine(medicine: MedicineData)
 
-    @Query("DELETE FROM MedicineData WHERE verificationName = :verificationName")
-    suspend fun deleteMedicineByVerificationName(verificationName: String)
+    @Query("DELETE FROM MedicineData WHERE id = :id")
+    suspend fun deleteMedicineById(id: Int)
 }
