@@ -24,7 +24,7 @@ class CharacteristicRepositoryImpl(
         Room.databaseBuilder(
             context,
             CharacteristicDatabase::class.java,
-            "app-database"
+            "characteristic-database"
         )
             .addCallback(object : RoomDatabase.Callback() {
                 override fun onCreate(db: SupportSQLiteDatabase) {

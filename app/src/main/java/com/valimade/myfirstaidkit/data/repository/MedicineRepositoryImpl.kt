@@ -16,7 +16,7 @@ class MedicineRepositoryImpl(
         Room.databaseBuilder(
             context,
             MedicineDatabase::class.java,
-            "app-database"
+            "medicine-database"
         ).build()
     }
     private val dao by lazy { database.dao() }

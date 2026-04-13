@@ -85,7 +85,7 @@ class MedicineViewModel(
         }
     }
 
-    private suspend fun updateInitializationCharacteristic(
+    private fun updateInitializationCharacteristic(
         characteristic: Characteristic, name: String,
     ): Pair<CharacteristicMedicine, Boolean> {
         return Pair(
@@ -172,6 +172,18 @@ class MedicineViewModel(
                 verificationName = verificationName
             )
             insertCharacteristicUseCase(characteristicMedicine)
+
+            _medicineState.update {
+                it.copy(
+                    characteristics = it.characteristics + Pair(characteristicMedicine, true),
+                )
+            }
+
+            _medicineState.update {
+                it.copy(
+                    error = "Данная характеристика уже присутсвует в списке",
+                )
+            }
 
         } else {
             _medicineState.update {
